@@ -39,12 +39,13 @@ def main():
 
 def get_group_onduty(today, data) -> int:
     print('getting group on duty...')
+    groups = data["groups"]
     last_update = dt.datetime.strptime(data['update'], '%Y-%m-%d').date()
     days_passed = (today-last_update).days
     last_group = data["lastGroup"]
     delta = (today.weekday() == 0) *-2  # If it's Monday, then ignore extra weekend days
-    return [3,1,2][(days_passed+last_group+delta) % 3]
-
+    sel_from = [len(groups)] + list(range(1, len(groups)))
+    return sel_from[(days_passed+last_group+delta) % len(groups)]
 
 def generate_normal_wallpaper(date, group_no:int, group_members:tuple):
     print('generating solid wallpaper...')
@@ -63,9 +64,9 @@ def generate_normal_wallpaper(date, group_no:int, group_members:tuple):
     else:
         draw.text((500,425), f"{group_no}组值日", text_color, font=large)
         draw.text((830,700), f'组员：', text_color, font=small)
-        if len(group_members) == 4:
+        if len(group_members) <= 4:
             draw.text((470,775), "，".join(group_members), text_color, font=small)
-        elif len(group_members) == 5:
+        elif len(group_members) >= 5:
             draw.text((330,775), "，".join(group_members), text_color, font=small)
 
     return background
@@ -95,9 +96,9 @@ def generate_side_pic_wallpaper(date, group_no:int, group_members:tuple):
         draw.text((540, 400), "周末快乐", text_color, font=large)
     else:
         draw.text((570,400), f"{group_no}组值日", text_color, font=large)
-        if len(group_members) == 4:
+        if len(group_members) <= 4:
             draw.text((570,700), "，".join(group_members), text_color, font=small)
-        elif len(group_members) == 5:
+        elif len(group_members) >= 5:
             draw.text((570,700), "，".join(group_members), text_color, font=small)
 
     return background
@@ -126,9 +127,9 @@ def generate_full_pic_wallpaper(date, group_no:int, group_members:tuple):
     else:
         draw.text((550, 375), f"{group_no}组值日", text_color, font=large)
         draw.text((880, 650), f'组员：', text_color, font=small)
-        if len(group_members) == 4:
+        if len(group_members) <= 4:
             draw.text((520, 725), "，".join(group_members), text_color, font=small)
-        elif len(group_members) == 5:
+        elif len(group_members) >= 5:
             draw.text((380, 725), "，".join(group_members), text_color, font=small)
 
     return background
